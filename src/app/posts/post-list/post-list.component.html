@@ -1,0 +1,14 @@
+<mat-accordion multi="true" *ngIf="sampleList.length>0">
+  <mat-expansion-panel *ngFor="let item of sampleList">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{item.title}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{item.desc}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    Hidden Content
+  </mat-expansion-panel>
+</mat-accordion>
+<p class="cent mat-body-1" *ngIf="sampleList.length<=0">Nothing here yet.</p>
