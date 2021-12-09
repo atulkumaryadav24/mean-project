@@ -1,14 +1,13 @@
-<mat-accordion multi="true" *ngIf="sampleList.length>0">
-  <mat-expansion-panel *ngFor="let item of sampleList">
+<mat-accordion multi="true" *ngIf="posts.length>0">
+  <mat-expansion-panel *ngFor="let item of posts">
     <mat-expansion-panel-header>
-      <mat-panel-title>
         {{item.title}}
-      </mat-panel-title>
-      <mat-panel-description>
-        {{item.desc}}
-      </mat-panel-description>
     </mat-expansion-panel-header>
-    Hidden Content
+        <p>{{item.desc}}</p>
+        <mat-action-row>
+          <button mat-button color="primary">EDIT</button>
+          <button mat-button color="warn">DELETE</button>
+        </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p class="cent mat-body-1" *ngIf="sampleList.length<=0">Nothing here yet.</p>
+<p class="cent mat-body-1" *ngIf="posts.length<=0">Nothing here yet.</p>
