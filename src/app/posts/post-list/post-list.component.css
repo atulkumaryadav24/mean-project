@@ -4,3 +4,7 @@
 mat-accordion,mat-expansion-panel{
   margin:1rem auto;
 }
+
+mat-spinner{
+  margin:auto;
+}
