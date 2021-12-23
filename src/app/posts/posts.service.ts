@@ -14,7 +14,8 @@ export class PostService{
   private postsUpdated = new Subject<{posts : Post[], totalPosts : number}>();
   getPosts(postPerPage : number, currentPage : number){
     const queryParam = `?pagesize=${postPerPage}&page=${currentPage}`;
-    this.http.get<{message : string, posts : any, maxPosts : number}>('http://localhost:3000/api/posts' + queryParam)
+    this.http.get<{message : string, posts : any, maxPosts : number}>
+      ('http://localhost:3000/api/posts' + queryParam)
     .pipe(map((postData)=>{
       return { posts : postData.posts.map(post=>{
         return{

@@ -2,8 +2,8 @@ import { Component } from "@angular/core";
 
 @Component({
   selector:'post-header',
-  templateUrl: './post-header.component.html',
-  styleUrls : ['./post-header.component.css']
+  templateUrl: './header.component.html',
+  styleUrls : ['./header.component.css']
 })
 export class PostHeaderComponent{
 
