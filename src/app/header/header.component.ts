@@ -12,11 +12,15 @@ export class PostHeaderComponent implements OnInit,OnDestroy{
   private authListenerSubs : Subscription;
   constructor(private authService: AuthService) {}
   ngOnInit(){
+    this.userIsAuth = this.authService.getAuthStatus();
     this.authListenerSubs = this.authService
       .getAuthStatusListener()
       .subscribe(isAuth => {
         this.userIsAuth = isAuth;
       });
+  }
+  onLogout(){
+    this.authService.logoutUser();
   }
   ngOnDestroy(){
     this.authListenerSubs.unsubscribe();
