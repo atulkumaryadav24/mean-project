@@ -1,6 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, ParamMap } from "@angular/router";
+import { Subscription } from "rxjs";
+import { AuthService } from "src/app/auth/auth.service";
 import { Post } from "../post.template";
 import { PostService } from '../posts.service';
 import { mimeType } from "./mime-type.validator";
@@ -9,7 +11,7 @@ import { mimeType } from "./mime-type.validator";
   templateUrl : './post-create.component.html',
   styleUrls : ['./post-create.component.css']
 })
-export class PostCreateComponent implements OnInit{
+export class PostCreateComponent implements OnInit,OnDestroy{
   // enteredText='';
   // postText = 'Nothing yet';
   post : Post;
@@ -18,7 +20,13 @@ export class PostCreateComponent implements OnInit{
   isLoading = false;
   form : FormGroup;
   imagePreview : string;
+  authStatusSubs : Subscription;
   ngOnInit(){
+  this.authStatusSubs = this.authService.getAuthStatusListener().subscribe(
+    authStatus => {
+      this.isLoading = false;
+    }
+  );
   this.form = new FormGroup({
     'title' : new FormControl(null , {
       validators:[Validators.required , Validators.minLength(3)]
@@ -42,7 +50,8 @@ export class PostCreateComponent implements OnInit{
             id : postData._id,
             title : postData.title,
             desc : postData.desc,
-            imagePath : postData.imagePath
+            imagePath : postData.imagePath,
+            creator : ''
           };
           this.form.setValue({
             'title': this.post.title,
@@ -57,7 +66,7 @@ export class PostCreateComponent implements OnInit{
        }
     });
   }
-  constructor(public postService : PostService, public route : ActivatedRoute){}
+  constructor(public postService : PostService, public route : ActivatedRoute, private authService: AuthService){}
 
   onImagePicked(event : Event){
     const file = (event.target as HTMLInputElement).files[0];
@@ -87,5 +96,8 @@ export class PostCreateComponent implements OnInit{
         );
     }
     this.form.reset();
+  }
+  ngOnDestroy(){
+      this.authStatusSubs.unsubscribe();
   }
 }

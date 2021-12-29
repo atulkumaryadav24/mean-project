@@ -28,7 +28,8 @@ router.post('', checkAuth,multer({storage : storage}).single("image"),(req,res,n
   const post = new Post({
     title : req.body.title,
     desc : req.body.desc,
-    imagePath : url + "/images/" + req.file.filename
+    imagePath : url + "/images/" + req.file.filename,
+    creator : req.userData.userId
   });
   post.save().then(createdPost => {
   res.status(201).json({
@@ -37,6 +38,11 @@ router.post('', checkAuth,multer({storage : storage}).single("image"),(req,res,n
         ...createdPost,
         id : createdPost._id
       }
+    });
+  })
+  .catch(error =>{
+    res.status(500).json({
+      message : "Creating a post failed!"
     });
   });
 });
@@ -61,6 +67,11 @@ router.get('',(req,res,next)=>{
     posts : fetchedPosts,
     maxPosts : count
     });
+  })
+  .catch(error =>{
+    res.status(500).json({
+      message : "Fetching posts failed!"
+    });
   });
 });
 
@@ -73,6 +84,11 @@ router.get('/:id',(req, res, next)=>{
     else{
       res.status(404).json({ message : "Post Not Found !!" });
     }
+  })
+  .catch(error =>{
+    res.status(500).json({
+      message : "Fetching post failed!"
+    });
   });
 });
 
@@ -86,19 +102,40 @@ router.put('/:id', checkAuth, multer({storage : storage}).single("image"), (req,
     _id : req.body.id,
     title : req.body.title,
     desc : req.body.desc,
-    imagePath : imagePath
+    imagePath : imagePath,
+    creator : req.userData.userId
   });
-  Post.updateOne({_id : req.params.id} , post).then(result=>{
+  Post.updateOne({_id : req.params.id, creator: req.userData.userId} , post).then(result=>{
     console.log(result);
-    res.status(200).json({  message : "Post Updated" });
+    if(result.modifiedCount > 0){
+      res.status(200).json({  message : "Post Updated!" });
+    }
+    else{
+      res.status(401).json({  message : "Not Authorized!" });
+    }
+  })
+  .catch(error =>{
+    res.status(500).json({
+      message : "Update failed!"
+    });
   });
 });
 
 router.delete('/:id', checkAuth,(req,res,next)=>{
-  Post.deleteOne({_id : req.params.id}).then(result=>{
+  Post.deleteOne({_id : req.params.id, creator: req.userData.userId}).then(result=>{
     console.log(result);
-    res.status(200).json({  message : "Post Deleted" });
+    if(result.deletedCount > 0){
+      res.status(200).json({  message : "Post Deleted!" });
+    }
+    else{
+      res.status(401).json({  message : "Not Authorized!" });
+    }
   })
+  .catch(error =>{
+    res.status(500).json({
+      message : "Delete failed!"
+    });
+  });
 });
 
 module.exports = router;
