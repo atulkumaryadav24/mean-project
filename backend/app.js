@@ -6,12 +6,12 @@ const usersRoute = require('./routes/user');
 const mongoose = require('mongoose');
 
 const app = express();
-mongoose.connect('mongodb+srv://Atul:kC7x0laJNVAuoU6H@cluster0.gzorx.mongodb.net/ng-angular?retryWrites=true&w=majority')
+mongoose.connect("mongodb+srv://Atul:" + process.env.MONGO_ATLAS_PW + "@cluster0.gzorx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 .then(()=>{
   console.log("Connection Successful");
 })
 .catch((e)=>{
-  console.log("Connection Failed"+e.message);
+  console.log("Connection Failed: "+e.message);
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
